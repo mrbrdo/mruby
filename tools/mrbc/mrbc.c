@@ -216,6 +216,7 @@ main(int argc, char **argv)
   else {
     n = mrb_dump_irep(mrb, n, args.wfp);
   }
+  codedump_all(mrb, 0);
 
   cleanup(mrb, &args);
   return EXIT_SUCCESS;
