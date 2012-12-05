@@ -15,8 +15,7 @@
     CASE(OP_JMPIF) {
       /* A sBx  if R(A) pc+=sBx */
       if (mrb_test(regs[GETARG_A(i)])) {
-        pc += GETARG_sBx(i);
-        JUMP;
+        JUMP_TO_PC(GETARG_sBx(i));
       }
       NEXT;
     }

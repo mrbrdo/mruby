@@ -142,10 +142,6 @@
       NEXT;
     }
 
-    CASE(OP_SENDB) {
-      /* fall through */
-    };
-
     CASE(OP_FSEND) {
       /* A B C  R(A) := fcall(R(A),Sym(B),R(A+1),... ,R(A+C)) */
       NEXT;
@@ -161,50 +157,6 @@
 
     CASE(OP_KDICT) {
       /* A C            R(A) := kdict */
-      NEXT;
-    }
-
-    CASE(OP_ADD) {
-      /* A B C  R(A) := R(A)+R(A+1) (Syms[B]=:+,C=1)*/
-      int a = GETARG_A(i);
-
-      /* need to check if op is overridden */
-      switch (TYPES2(mrb_type(regs[a]),mrb_type(regs[a+1]))) {
-      case TYPES2(MRB_TT_FIXNUM,MRB_TT_FIXNUM):
-  {
-    mrb_int x, y, z;
-
-    x = mrb_fixnum(regs[a]);
-    y = mrb_fixnum(regs[a+1]);
-    z = x + y;
-    if (((x < 0) ^ (y < 0)) == 0 && (x < 0) != (z < 0)) {
-      /* integer overflow */
-      SET_FLT_VALUE(regs[a], (mrb_float)x + (mrb_float)y);
-      break;
-    }
-    SET_INT_VALUE(regs[a], z);
-  }
-  break;
-      case TYPES2(MRB_TT_FIXNUM,MRB_TT_FLOAT):
-  {
-    mrb_int x = mrb_fixnum(regs[a]);
-    mrb_float y = mrb_float(regs[a+1]);
-    SET_FLT_VALUE(regs[a], (mrb_float)x + y);
-  }
-  break;
-      case TYPES2(MRB_TT_FLOAT,MRB_TT_FIXNUM):
-  OP_MATH_BODY(+,attr_f,attr_i);
-  break;
-      case TYPES2(MRB_TT_FLOAT,MRB_TT_FLOAT):
-  OP_MATH_BODY(+,attr_f,attr_f);
-  break;
-      case TYPES2(MRB_TT_STRING,MRB_TT_STRING):
-  regs[a] = mrb_str_plus(mrb, regs[a], regs[a+1]);
-  break;
-      default:
-  goto L_SEND;
-      }
-      mrb->arena_idx = ai;
       NEXT;
     }
 
@@ -474,13 +426,6 @@
       NEXT;
     }
 
-    CASE(OP_STRING) {
-      /* A Bx           R(A) := str_new(Lit(Bx)) */
-      regs[GETARG_A(i)] = mrb_str_literal(mrb, pool[GETARG_Bx(i)]);
-      mrb->arena_idx = ai;
-      NEXT;
-    }
-
     CASE(OP_STRCAT) {
       /* A B    R(A).concat(R(B)) */
       mrb_str_concat(mrb, regs[GETARG_A(i)], regs[GETARG_B(i)]);
@@ -544,16 +489,6 @@
       NEXT;
     }
 
-    CASE(OP_METHOD) {
-      /* A B            R(A).newmethod(Sym(B),R(A+1)) */
-      int a = GETARG_A(i);
-      struct RClass *c = mrb_class_ptr(regs[a]);
-
-      mrb_define_method_vm(mrb, c, syms[GETARG_B(i)], regs[a+1]);
-      mrb->arena_idx = ai;
-      NEXT;
-    }
-
     CASE(OP_SCLASS) {
       /* A B    R(A) := R(B).singleton_class */
       regs[GETARG_A(i)] = mrb_singleton_class(mrb, regs[GETARG_B(i)]);
@@ -567,7 +502,7 @@
         static const char msg[] = "no target class or module";
         mrb_value exc = mrb_exc_new(mrb, E_TYPE_ERROR, msg, sizeof(msg) - 1);
         mrb->exc = (struct RObject*)mrb_object(exc);
-        goto L_RAISE;
+        // TODO goto L_RAISE;
       }
       regs[GETARG_A(i)] = mrb_obj_value(mrb->ci->target_class);
       NEXT;

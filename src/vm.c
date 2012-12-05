@@ -515,6 +515,7 @@ mrb_run(mrb_state *mrb, struct RProc *proc, mrb_value self)
     &&L_OP_METHOD, &&L_OP_SCLASS, &&L_OP_TCLASS,
     &&L_OP_DEBUG, &&L_OP_STOP, &&L_OP_ERR,
   };
+
 #endif
 
 
@@ -1126,6 +1127,7 @@ mrb_run(mrb_state *mrb, struct RProc *proc, mrb_value self)
       if (mrb->exc) {
         mrb_callinfo *ci;
         int eidx;
+      printf("EXC\n");
 
       L_RAISE:
         ci = mrb->ci;
