@@ -358,7 +358,7 @@ to_hash(mrb_state *mrb, mrb_value val)
   retrieve arguments from mrb_state.
 
   mrb_get_args(mrb, format, ...)
-  
+
   returns number of arguments parsed.
 
   fortmat specifiers:
@@ -759,7 +759,7 @@ mrb_mod_include_p(mrb_state *mrb, mrb_value mod)
   }
   return mrb_false_value();
 }
- 
+
 static mrb_value
 mrb_mod_ancestors(mrb_state *mrb, mrb_value self)
 {
@@ -1424,6 +1424,7 @@ mod_define_method(mrb_state *mrb, mrb_value self)
     mrb_raise(mrb, E_ARGUMENT_ERROR, "no block given");
   }
   p = (struct RProc*)mrb_obj_alloc(mrb, MRB_TT_PROC, mrb->proc_class);
+
   mrb_proc_copy(p, mrb_proc_ptr(blk));
   mrb_define_method_raw(mrb, c, mid, p);
   return blk;

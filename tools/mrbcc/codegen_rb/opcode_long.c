@@ -1,57 +1,4 @@
 
-    CASE(OP_ARGARY) {
-      /* A Bx   R(A) := argument array (16=6:1:5:4) */
-      int a = GETARG_A(i);
-      int bx = GETARG_Bx(i);
-      int m1 = (bx>>10)&0x3f;
-      int r  = (bx>>9)&0x1;
-      int m2 = (bx>>4)&0x1f;
-      int lv = (bx>>0)&0xf;
-      mrb_value *stack;
-
-      if (lv == 0) stack = regs + 1;
-      else {
-        struct REnv *e = uvenv(mrb, lv-1);
-        if (!e) {
-          mrb_value exc;
-          static const char m[] = "super called outside of method";
-          exc = mrb_exc_new(mrb, E_NOMETHOD_ERROR, m, sizeof(m) - 1);
-          mrb->exc = (struct RObject*)mrb_object(exc);
-          goto L_RAISE;
-        }
-        stack = e->stack + 1;
-      }
-      if (r == 0) {
-        regs[a] = mrb_ary_new_elts(mrb, m1+m2, stack);
-      }
-      else {
-        mrb_value *pp = NULL;
-        struct RArray *rest;
-        int len = 0;
-
-        if (mrb_array_p(stack[m1])) {
-          struct RArray *ary = mrb_ary_ptr(stack[m1]);
-
-          pp = ary->ptr;
-          len = ary->len;
-        }
-        regs[a] = mrb_ary_new_capa(mrb, m1+len+m2);
-        rest = mrb_ary_ptr(regs[a]);
-        stack_copy(rest->ptr, stack, m1);
-        if (len > 0) {
-          stack_copy(rest->ptr+m1, pp, len);
-        }
-        if (m2 > 0) {
-          stack_copy(rest->ptr+m1+len, stack+m1+1, m2);
-        }
-        rest->len = m1+len+m2;
-      }
-      regs[a+1] = stack[m1+r+m2];
-      mrb->arena_idx = ai;
-      NEXT;
-    }
-
-
     CASE(OP_TAILCALL) {
       /* A B C  return call(R(A),Sym(B),R(A+1),... ,R(A+C-1)) */
       int a = GETARG_A(i);
@@ -111,27 +58,4 @@
         pc = irep->iseq;
       }
       JUMP;
-    }
-
-    CASE(OP_BLKPUSH) {
-      /* A Bx   R(A) := block (16=6:1:5:4) */
-      int a = GETARG_A(i);
-      int bx = GETARG_Bx(i);
-      int m1 = (bx>>10)&0x3f;
-      int r  = (bx>>9)&0x1;
-      int m2 = (bx>>4)&0x1f;
-      int lv = (bx>>0)&0xf;
-      mrb_value *stack;
-
-      if (lv == 0) stack = regs + 1;
-      else {
-        struct REnv *e = uvenv(mrb, lv-1);
-  if (!e) {
-    localjump_error(mrb, "yield");
-    goto L_RAISE;
-  }
-        stack = e->stack + 1;
-      }
-      regs[a] = stack[m1+r+m2];
-      NEXT;
     }

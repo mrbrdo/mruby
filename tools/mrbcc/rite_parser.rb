@@ -1,5 +1,4 @@
 require 'ostruct'
-require 'pry'
 require 'active_support/core_ext'
 
 class MrbInstruction
@@ -108,48 +107,52 @@ EOF
     @opcode_name = OPCODES[@opcode]
   end
 
-  def getarg_A
+  def opcode
+    @opcode_name
+  end
+
+  def GETARG_A
     (@instr >> 23) & 0x1ff
   end
 
-  def getarg_B
+  def GETARG_B
     (@instr >> 14) & 0x1ff
   end
 
-  def getarg_C
+  def GETARG_C
     (@instr >> 7) & 0x7f
   end
 
-  def getarg_Bx
+  def GETARG_Bx
     (@instr >> 7) & 0xffff
   end
 
-  def getarg_sBx
-    getarg_Bx - MAXARG_sBx
+  def GETARG_sBx
+    self.GETARG_Bx - MAXARG_sBx
   end
 
-  def getarg_Ax
+  def GETARG_Ax
     (@instr >> 7) & 0x1ffffff
   end
 
-  def getarg_unpack_b(n1, n2)
+  def GETARG_UNPACK_b(n1, n2)
     (@instr >> (7+n2)) & (((1<<n1)-1))
   end
 
-  def getarg_unpack_c(n1, n2)
+  def GETARG_UNPACK_c(n1, n2)
     (@instr >> 7) & (((1<<n2)-1))
   end
 
-  def getarg_b
-    getarg_unpack_b(14, 2)
+  def GETARG_b
+    self.GETARG_UNPACK_b(14, 2)
   end
 
-  def getarg_c
-    getarg_unpack_c(14, 2)
+  def GETARG_c
+    self.GETARG_UNPACK_c(14, 2)
   end
 
   def to_s
-    [@opcode_name, getarg_A, getarg_B, getarg_C].inspect
+    [@opcode_name, self.GETARG_A, self.GETARG_B, self.GETARG_C].inspect
   end
 end
 
@@ -192,10 +195,15 @@ class RiteParser
   attr_reader :header, :ireps
   def initialize(filename)
     @file = File.open(filename, "rb") do |f|
-      StringIO.new << f.read
+      sio = StringIO.new
+      while !f.eof?
+        sio << f.read
+      end
+      sio
     end
-    @file.string.gsub!(/\n|\r/, "")
-    @file.string.gsub!(/#.*/, "")
+    # gotta look into how comments work, this isn't good if we have strings containing # or \n
+    #@file.string.gsub!(/\n|\r/, "")
+    #@file.string.gsub!(/#.*/, "")
     @file.rewind
 
     read_header

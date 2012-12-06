@@ -92,7 +92,7 @@
       ci->argc = n;
       if (ci->argc == CALL_MAXARGS) ci->argc = -1;
       ci->target_class = m->target_class;
-      ci->pc = pc + 1;
+      //ci->pc = pc + 1;
 
       /* prepare stack */
       mrb->stack += a;
@@ -108,23 +108,7 @@
         NEXT;
       }
       else {
-        /* fill callinfo */
-        ci->acc = a;
-
-        /* setup environment for calling method */
-        ci->proc = m;
-        irep = m->body.irep;
-        pool = irep->pool;
-        syms = irep->syms;
-        ci->nregs = irep->nregs;
-        if (ci->argc < 0) {
-          stack_extend(mrb, (irep->nregs < 3) ? 3 : irep->nregs, 3);
-        }
-        else {
-          stack_extend(mrb, irep->nregs,  ci->argc+2);
-        }
-        regs = mrb->stack;
-        pc = irep->iseq;
-        JUMP;
+        printf("TODO SUPER 2 MRB\n");
+        exit(0);
       }
     }

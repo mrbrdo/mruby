@@ -726,6 +726,7 @@ mod_const_check(mrb_state *mrb, mrb_value mod)
   }
 }
 
+#include <stdio.h>
 static mrb_value
 const_get(mrb_state *mrb, struct RClass *base, mrb_sym sym)
 {
@@ -771,11 +772,11 @@ mrb_const_get(mrb_state *mrb, mrb_value mod, mrb_sym sym)
   return const_get(mrb, mrb_class_ptr(mod), sym);
 }
 
+#include <stdio.h>
 mrb_value
 mrb_vm_const_get(mrb_state *mrb, mrb_sym sym)
 {
   struct RClass *c = mrb->ci->proc->target_class;
-
   if (!c) c = mrb->ci->target_class;
   if (c) {
     struct RClass *c2 = c;

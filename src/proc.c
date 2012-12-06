@@ -167,6 +167,7 @@ mrb_init_proc(mrb_state *mrb)
   mrb_define_method(mrb, mrb->proc_class, "initialize_copy", mrb_proc_init_copy, ARGS_REQ(1));
 
   m = mrb_proc_new(mrb, call_irep);
+  mrb_define_method_raw(mrb, mrb->proc_class, mrb_intern(mrb, "call2"), m);
   mrb_define_method_raw(mrb, mrb->proc_class, mrb_intern(mrb, "call"), m);
   mrb_define_method_raw(mrb, mrb->proc_class, mrb_intern(mrb, "[]"), m);
 
