@@ -200,10 +200,6 @@ mrb_f_send(mrb_state *mrb, mrb_value self)
   int argc;
 
   mrb_get_args(mrb, "n*&", &name, &argv, &argc, &block);
-  printf("%d\n", argc);
-  if (argc == 1) {
-    mrb_p(mrb, argv[0]);
-  }
   return mrb_funcall_with_block(mrb,self, name, argc, argv, block);
 }
 

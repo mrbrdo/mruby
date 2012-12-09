@@ -83,6 +83,7 @@ void mrbb_main(mrb_state *mrb) {
   {
     struct RProc *m = mrb_proc_new_cfunc(mrb, mrbb_proc_call);
     mrb_define_method_raw(mrb, mrb->proc_class, mrb_intern(mrb, "call"), m);
+    mrb_define_method_raw(mrb, mrb->proc_class, mrb_intern(mrb, "[]"), m);
   }
   // END TODO
 

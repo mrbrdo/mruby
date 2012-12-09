@@ -67,14 +67,12 @@
 #include 'test/assert.rb'
 
 # Failing:
-  #include 'test/t/bs_block.rb'
-  #include 'test/t/proc.rb'
-  #include 'test/t/struct.rb'
 
 # Passing:
   #include 'test/t/argumenterror.rb'
   #include 'test/t/array.rb'
   #include 'test/t/basicobject.rb'
+  #include 'test/t/bs_block.rb'
   #include 'test/t/bs_literal.rb'
   #include 'test/t/class.rb'
   #include 'test/t/comparable.rb'
@@ -85,6 +83,7 @@
   #include 'test/t/hash.rb'
   #include 'test/t/indexerror.rb'
   #include 'test/t/integer.rb'
+  #include 'test/t/kernel.rb'
   #include 'test/t/literals.rb'
   #include 'test/t/localjumperror.rb'
   #include 'test/t/math.rb'
@@ -94,12 +93,14 @@
   #include 'test/t/nomethoderror.rb'
   #include 'test/t/numeric.rb'
   #include 'test/t/object.rb'
+  #include 'test/t/proc.rb'
   #include 'test/t/range.rb'
   #include 'test/t/rangeerror.rb'
   #include 'test/t/regexperror.rb'
   #include 'test/t/runtimeerror.rb'
   #include 'test/t/standarderror.rb'
   #include 'test/t/string.rb'
+  #include 'test/t/struct.rb'
   #include 'test/t/symbol.rb'
   #include 'test/t/syntax.rb'
   #include 'test/t/time.rb'
