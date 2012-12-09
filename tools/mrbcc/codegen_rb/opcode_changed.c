@@ -11,7 +11,7 @@
       int n = GETARG_C(i);
       mrb_callinfo *prev_ci = mrb->ci;
 
-      mrb_funcall_fast(mrb, regs[a], syms[GETARG_B(i)], n, &regs[a+1], mrb_nil_value());
+      mrbb_send(mrb, syms[GETARG_B(i)], n, regs, a, 0);
       mrb->arena_idx = ai; // TODO probably can remove
       if (mrb->ci != prev_ci) { // special OP_RETURN (e.g. break)
         cipush(mrb);
@@ -24,7 +24,7 @@
       int n = GETARG_C(i);
       mrb_callinfo *prev_ci = mrb->ci;
 
-      mrb_funcall_fast(mrb, regs[a], syms[GETARG_B(i)], n, &regs[a+1], regs[a+n+1]);
+      mrbb_send(mrb, syms[GETARG_B(i)], n, regs, a, 1);
       mrb->arena_idx = ai; // TODO probably can remove
       if (mrb->ci != prev_ci) { // special OP_RETURN (e.g. break)
         cipush(mrb);
@@ -91,10 +91,6 @@
           break;
         }
 
-        if (acc >= 0) {
-          //printf("RETURN2RB?\n");
-          //exit(0);
-        }
         while (eidx > mrb->ci[-1].eidx) {
           mrbb_ecall(mrb, mrb->ensure[--eidx]);
         }

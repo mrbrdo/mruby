@@ -23,7 +23,6 @@ ecall(mrb_state *mrb, int i)
   if (!mrb->exc) mrb->exc = exc;
 }
 
-
 static void
 mrbb_ecall(mrb_state *mrb, struct RProc *p)
 {

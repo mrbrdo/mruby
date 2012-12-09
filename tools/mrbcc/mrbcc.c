@@ -36,16 +36,16 @@
     OP_CMP_BODY(op,attr_f,attr_f);\
     break;\
   default:\
-    mrb_funcall_fast(mrb, regs[a], mrb_intern(mrb, #op ), 1, &regs[a+1], mrb_nil_value());\
+    mrbb_send(mrb, mrb_intern(mrb, #op ), 1, regs, a, 0);\
     break;\
   }\
 } while (0)
 
 // We need some functions from vm.c that are not exposed
-#include "c_files/proc.c"
 #include "c_files/vm_extern.c"
 #include "c_files/vm.c"
 #include "c_files/exception.c"
+#include "c_files/proc.c"
 #include "c_files/method_dispatch.c"
 
 mrb_value testfun(mrb_state *mrb, mrb_value args) {
