@@ -78,7 +78,7 @@ end
 class OpcodeParser
   attr_reader :name
   attr_reader :irep
-  DEBUG_MODE = true
+  DEBUG_MODE = false
   def initialize(parser, name, irep_idx)
     @name = name || "met_#{SecureRandom.hex}"
     @irep = parser.ireps[irep_idx]

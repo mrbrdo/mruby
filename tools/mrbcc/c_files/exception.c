@@ -60,7 +60,6 @@ void mrbb_raise(mrb_state *mrb, jmp_buf *prev_jmp) {
   eidx = mrb->ci->eidx;
 
   if (ci == mrb->cibase) mrbb_stop(mrb);
-  printf("ci0 %d ci-1 %d\n", ci[0].ridx, ci[-1].ridx);
   while (ci[0].ridx == ci[-1].ridx) {
     cipop(mrb);
     ci = mrb->ci;

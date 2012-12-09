@@ -36,6 +36,7 @@
     OP_CMP_BODY(op,attr_f,attr_f);\
     break;\
   default:\
+    mrb_funcall_fast(mrb, regs[a], mrb_intern(mrb, #op ), 1, &regs[a+1], mrb_nil_value());\
     break;\
   }\
 } while (0)

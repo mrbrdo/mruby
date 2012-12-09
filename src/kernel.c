@@ -200,7 +200,10 @@ mrb_f_send(mrb_state *mrb, mrb_value self)
   int argc;
 
   mrb_get_args(mrb, "n*&", &name, &argv, &argc, &block);
-  printf("OK!");
+  printf("%d\n", argc);
+  if (argc == 1) {
+    mrb_p(mrb, argv[0]);
+  }
   return mrb_funcall_with_block(mrb,self, name, argc, argv, block);
 }
 
@@ -926,7 +929,6 @@ mrb_f_raise(mrb_state *mrb, mrb_value self)
   mrb_value a[2];
   int argc;
 
-  printf("HEY!!\n");
   argc = mrb_get_args(mrb, "|oo", &a[0], &a[1]);
   switch (argc) {
   case 0:

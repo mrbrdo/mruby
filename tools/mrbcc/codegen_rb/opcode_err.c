@@ -1,11 +1,20 @@
     CASE(OP_ONERR) {
       /* sBx    pc+=sBx on exception */
-      if (mrb->rsize <= mrb->ci->ridx) {
-        if (mrb->rsize == 0) mrb->rsize = 16;
-        else mrb->rsize *= 2;
-        mrb->rescue = (mrb_code **)mrb_realloc(mrb, mrb->rescue, sizeof(mrb_code*) * mrb->rsize);
+      jmp_buf c_jmp;
+      if (setjmp(c_jmp) == 0) {
+        mrb->jmp = &c_jmp;
+        if (mrb->rsize <= mrb->ci->ridx) {
+          if (mrb->rsize == 0) mrb->rsize = 16;
+          else mrb->rsize *= 2;
+          mrb->rescue = (mrb_code **)mrb_realloc(mrb, mrb->rescue, sizeof(mrb_code*) * mrb->rsize);
+        }
+        mrb->rescue[mrb->ci->ridx++] = &c_jmp;
       }
-      mrb->rescue[mrb->ci->ridx++] = &&rescue_label(GETARG_sBx(i));
+      else {
+        mrb->ci->ridx--;
+        mrb->jmp = (jmp_buf *)mrb->rescue[mrb->ci->ridx-1];
+        goto rescue_label(GETARG_sBx(i));
+      }
 
       NEXT;
     }

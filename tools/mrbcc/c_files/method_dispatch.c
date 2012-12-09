@@ -38,7 +38,13 @@ mrb_funcall_fast(mrb_state *mrb, mrb_value self, mrb_sym mid, int argc, mrb_valu
   }
 
   /* push callinfo */
+  mrb_p(mrb, regs[a]);
+  mrb_p(mrb, regs[a+1]);
+  mrb_p(mrb, regs[a+2]);
   ci = cipush(mrb);
+  mrb_p(mrb, regs[a]);
+  mrb_p(mrb, regs[a+1]);
+  mrb_p(mrb, regs[a+2]);
   ci->mid = mid;
   ci->proc = m;
   ci->stackidx = mrb->stack - mrb->stbase;
@@ -53,6 +59,7 @@ mrb_funcall_fast(mrb_state *mrb, mrb_value self, mrb_sym mid, int argc, mrb_valu
   mrb->stack = regs;
 
   if (MRB_PROC_CFUNC_P(m)) {
+    printf("hello cfunc %d\n", regs);fflush(stdout);
     *regs = m->body.func(mrb, recv);
     mrb->arena_idx = ai;
     if (mrb->exc) mrbb_raise(mrb->exc, 0);

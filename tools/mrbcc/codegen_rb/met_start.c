@@ -21,17 +21,6 @@ mrb_value MET_NAME(mrb_state *mrb, mrb_value self) {
   regs[0] = self;
   // TODO regs[0] = m->env->stack[0]; ? OP_CALL
 
-  {
-    jmp_buf c_jmp;
-
-    if (setjmp(c_jmp) == 0) {
-      mrb->jmp = &c_jmp;
-    }
-    else {
-      goto *mrb->rescue[--mrb->ci->ridx];
-    }
-  }
-
 /*
         mrb->jmp = prev_jmp_ensure; // TODO: what about retry?
         mrbb_ecall(mrb, mrbb_proc_new(mrb, GETARG_Bx(i)));
